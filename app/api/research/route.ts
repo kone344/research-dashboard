@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { store } from '@/lib/database';
-import { runResearch } from '@/lib/research-engine';
+import { runMockResearch } from '@/lib/mock-research';
 import { ResearchSession } from '@/lib/types';
 import { nanoid } from 'nanoid';
 
@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
 
     store.create(session);
 
-    // Start real MiMo-powered research in background
-    runResearch(id).catch(console.error);
+    // Start mock research in background (fire and forget)
+    runMockResearch(id).catch(console.error);
 
     return NextResponse.json({ id, status: 'pending' });
   } catch (error) {
