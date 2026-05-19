@@ -90,7 +90,6 @@ Any OpenAI-compatible endpoint works. Swap `BASE_URL` to switch providers:
 | Provider | Base URL | API Key | Model | Notes |
 |----------|----------|---------|-------|-------|
 | **Xiaomi MiMo (Official)** | `https://api.xiaomimimo.com/v1` | Required — get from [Console](https://platform.xiaomimimo.com/#/console/api-keys) | `mimo-v2.5-pro` | Official platform, apply for free 100T tokens at [100t.xiaomimimo.com](https://100t.xiaomimimo.com) |
-| **Xiaomi MiMo (GitLawb Proxy)** | `https://opengateway.gitlawb.com/v1/xiaomi-mimo` | Not required (use `none`) | `mimo-v2.5-pro` | Community proxy, free, rate limits unknown |
 | **OpenRouter** | `https://openrouter.ai/api/v1` | Required | `xiaomi/mimo-v2.5-pro` | Paid ($1/M input, $3/M output), many models available |
 | **Local (Ollama/vLLM)** | `http://localhost:11434/v1` | Not required | any local model | Self-hosted, no rate limits |
 
@@ -100,8 +99,8 @@ Set these in `.env.local` (local dev) or in your hosting platform's dashboard (N
 
 ```bash
 # LLM Configuration
-LLM_BASE_URL=https://opengateway.gitlawb.com/v1/xiaomi-mimo
-LLM_API_KEY=none
+LLM_BASE_URL=https://api.xiaomimimo.com/v1
+LLM_API_KEY=your-api-key-here
 LLM_MODEL=mimo-v2.5-pro
 ```
 
@@ -143,8 +142,6 @@ Each phase updates the session state in the in-memory store, which the frontend 
 To switch from MiMo to another provider, change the constants in `lib/mimo-client.ts`:
 
 ```typescript
-// Default: MiMo via GitLawb proxy (free, no key)
-const BASE_URL = 'https://opengateway.gitlawb.com/v1/xiaomi-mimo';
 const MODEL = 'mimo-v2.5-pro';
 
 // Or use OpenAI:
@@ -159,7 +156,6 @@ const MODEL = 'mimo-v2.5-pro';
 For production, use environment variables instead of hardcoding:
 
 ```typescript
-const BASE_URL = process.env.LLM_BASE_URL || 'https://opengateway.gitlawb.com/v1/xiaomi-mimo';
 const API_KEY = process.env.LLM_API_KEY || 'none';
 const MODEL = process.env.LLM_MODEL || 'mimo-v2.5-pro';
 ```
@@ -189,7 +185,6 @@ Set in Vercel/Netlify dashboard:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `LLM_BASE_URL` | OpenAI-compatible API base URL | `https://opengateway.gitlawb.com/v1/xiaomi-mimo` |
 | `LLM_API_KEY` | API key (use `none` if not required) | `none` |
 | `LLM_MODEL` | Model name | `mimo-v2.5-pro` |
 

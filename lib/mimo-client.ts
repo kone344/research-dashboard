@@ -1,5 +1,6 @@
-const BASE_URL = 'https://opengateway.gitlawb.com/v1/xiaomi-mimo';
-const MODEL = 'mimo-v2.5-pro';
+const BASE_URL = process.env.LLM_BASE_URL || 'https://api.xiaomimimo.com/v1';
+const API_KEY = process.env.LLM_API_KEY || '';
+const MODEL = process.env.LLM_MODEL || 'mimo-v2.5-pro';
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -29,9 +30,17 @@ export async function chat(
 ): Promise<string> {
   const { max_tokens = 2048, temperature = 0.7 } = options;
 
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (API_KEY) {
+    headers['Authorization'] = `Bearer ${API_KEY}`;
+  }
+
   const response = await fetch(`${BASE_URL}/chat/completions`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({
       model: MODEL,
       messages,
@@ -42,7 +51,7 @@ export async function chat(
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`MiMo API error ${response.status}: ${text}`);
+    throw new Error(`LLM API error ${response.status}: ${text}`);
   }
 
   const data: ChatResponse = await response.json();
